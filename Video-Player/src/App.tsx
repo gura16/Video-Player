@@ -10,6 +10,7 @@ function App() {
   const [descendingTime, setDescendingTime] = useState<number>(0);
   const [incrementingTime, setIncrementingTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
+  const [skipSeconds, setSkipSeconds] = useState<number>(10); // Default to skipping 10 seconds
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
@@ -43,6 +44,15 @@ function App() {
       "0"
     )}`;
   };
+  const skipForward = () => {
+    if (videoRef.current) {
+      const newTime = videoRef.current.currentTime + skipSeconds;
+      if (newTime <= videoRef.current.duration) {
+        videoRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+      }
+    }
+  };
 
   return (
     <div>
@@ -62,6 +72,7 @@ function App() {
       >
         Play/Pause
       </button>
+      <button onClick={skipForward}>Skip Forward {skipSeconds} seconds</button>
       <div>Descending: {formatTime(descendingTime)}</div>
       <input
         type="range"
