@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-const videoUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f3/Big_Buck_Bunny_first_23_seconds_1080p.ogv/Big_Buck_Bunny_first_23_seconds_1080p.ogv.720p.vp9.webm";
-
+const videoUrl = "https://media.w3.org/2010/05/sintel/trailer_hd.mp4";
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -11,6 +9,7 @@ function App() {
   const [incrementingTime, setIncrementingTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [skipSeconds, setSkipSeconds] = useState<number>(10); // Default to skipping 10 seconds
+  const [jumpBackSeconds, setJumpBackSeconds] = useState<number>(10); // Default to jumping back 10 seconds
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
@@ -54,6 +53,19 @@ function App() {
     }
   };
 
+  const jumpBack = () => {
+    if (videoRef.current) {
+      const newTime = videoRef.current.currentTime - jumpBackSeconds;
+      if (newTime >= 0) {
+        videoRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+      } else {
+        videoRef.current.currentTime = 0;
+        setCurrentTime(0);
+      }
+    }
+  };
+
   return (
     <div>
       <Maindiv>
@@ -61,6 +73,8 @@ function App() {
           <source src={videoUrl} type="video/webm" />
         </Video>
       </Maindiv>
+      <button onClick={jumpBack}>Jump Back {jumpBackSeconds} seconds</button>
+
       <button
         onClick={() => {
           if (videoRef.current?.paused) {
