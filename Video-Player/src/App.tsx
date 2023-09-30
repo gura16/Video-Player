@@ -9,6 +9,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [descendingTime, setDescendingTime] = useState<number>(0);
   const [incrementingTime, setIncrementingTime] = useState<number>(0);
+  const [volume, setVolume] = useState<number>(1);
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
@@ -76,6 +77,20 @@ function App() {
         }}
       />
       <div>Incrementing: {formatTime(incrementingTime)}</div>
+      <input
+        type="range"
+        min={0}
+        max={1}
+        step={0.01}
+        value={volume}
+        onChange={(e) => {
+          const newVolume = parseFloat(e.target.value);
+          if (videoRef.current) {
+            videoRef.current.volume = newVolume;
+            setVolume(newVolume);
+          }
+        }}
+      />
     </div>
   );
 }
@@ -83,7 +98,7 @@ function App() {
 export default App;
 
 const Video = styled.video`
-  width: 500px;
+  width: 700px;
   height: 300px;
 `;
 
