@@ -7,11 +7,20 @@ const videoUrl =
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [descendingTime, setDescendingTime] = useState<number>(0);
+  const [incrementingTime, setIncrementingTime] = useState<number>(0);
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
       const target = event.target as HTMLVideoElement;
-      setCurrentTime(target.currentTime);
+      const newTime = target.currentTime;
+      setCurrentTime(newTime);
+
+      // Update descending time
+      setDescendingTime(target.duration - newTime);
+
+      // Update incrementing time
+      setIncrementingTime(newTime);
     };
 
     if (videoRef.current) {
@@ -52,7 +61,7 @@ function App() {
       >
         Play/Pause
       </button>
-      <div>{formatTime(currentTime)}</div>
+      <div>Descending: {formatTime(descendingTime)}</div>
       <input
         type="range"
         min={0}
@@ -66,6 +75,7 @@ function App() {
           }
         }}
       />
+      <div>Incrementing: {formatTime(incrementingTime)}</div>
     </div>
   );
 }
