@@ -4,12 +4,24 @@ const videoUrl =
   "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f3/Big_Buck_Bunny_first_23_seconds_1080p.ogv/Big_Buck_Bunny_first_23_seconds_1080p.ogv.720p.vp9.webm";
 
 function App() {
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
 
   useEffect(() => {
-    videoRef.current?.addEventListener("timeupdate", (event) => {
-      console.log(event.target.currentTime);
-    });
+    const handleTimeUpdate = (event: Event) => {
+      const target = event.target as HTMLVideoElement;
+      setCurrentTime(target.currentTime);
+    };
+
+    if (videoRef.current) {
+      videoRef.current.addEventListener("timeupdate", handleTimeUpdate);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener("timeupdate", handleTimeUpdate);
+      }
+    };
   }, []);
 
   return (
@@ -30,6 +42,20 @@ function App() {
       >
         Play/Pause
       </button>
+      <input
+        type="range"
+        min={0}
+        max={videoRef.current?.duration || 0}
+        value={currentTime}
+        onChange={(e) => {
+          const time = parseFloat(e.target.value);
+          if (videoRef.current) {
+            videoRef.current.currentTime = time;
+            setCurrentTime(time);
+          }
+        }}
+      />
+      <div>{currentTime.toFixed(2)} seconds</div>
     </div>
   );
 }
