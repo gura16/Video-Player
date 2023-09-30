@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+
 const videoUrl =
   "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f3/Big_Buck_Bunny_first_23_seconds_1080p.ogv/Big_Buck_Bunny_first_23_seconds_1080p.ogv.720p.vp9.webm";
 
@@ -24,6 +25,15 @@ function App() {
     };
   }, []);
 
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
   return (
     <div>
       <Maindiv>
@@ -42,6 +52,7 @@ function App() {
       >
         Play/Pause
       </button>
+      <div>{formatTime(currentTime)}</div>
       <input
         type="range"
         min={0}
@@ -55,7 +66,6 @@ function App() {
           }
         }}
       />
-      <div>{currentTime.toFixed(2)} seconds</div>
     </div>
   );
 }
