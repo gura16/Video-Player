@@ -8,8 +8,10 @@ function App() {
   const [descendingTime, setDescendingTime] = useState<number>(0);
   const [incrementingTime, setIncrementingTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
-  const [skipSeconds, setSkipSeconds] = useState<number>(10); // Default to skipping 10 seconds
-  const [jumpBackSeconds, setJumpBackSeconds] = useState<number>(10); // Default to jumping back 10 seconds
+  const [skipSeconds, setSkipSeconds] = useState<number>(10);
+  const [jumpBackSeconds, setJumpBackSeconds] = useState<number>(10);
+  const [selectedQuality, setSelectedQuality] = useState("720p");
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
@@ -66,6 +68,26 @@ function App() {
     }
   };
 
+  const handleQualityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = e.target.value;
+    setSelectedQuality(selected);
+  };
+
+  const handlePlaybackSpeedChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedSpeed = parseFloat(e.target.value);
+    setPlaybackSpeed(selectedSpeed);
+    videoRef.current!.playbackRate = selectedSpeed;
+  };
+
+  const playbackSpeedOptions = [
+    { value: 0.5, label: "0.5x" },
+    { value: 1.0, label: "1.0x" },
+    { value: 1.5, label: "1.5x" },
+    { value: 2.0, label: "2.0x" },
+  ];
+
   return (
     <div>
       <Maindiv>
@@ -116,6 +138,25 @@ function App() {
           }
         }}
       />
+      <label>
+        Quality:
+        <select value={selectedQuality} onChange={handleQualityChange}>
+          <option value="720p">720p</option>
+          <option value="1080p">1080p</option>
+        </select>
+      </label>
+      <div>
+        <label>
+          Speed:
+          <select value={playbackSpeed} onChange={handlePlaybackSpeedChange}>
+            {playbackSpeedOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
     </div>
   );
 }
