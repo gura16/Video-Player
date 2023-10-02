@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import playimage from "./assets/images/pause-solid.svg";
 import pauseimage from "./assets/images/play-solid.svg";
+import back from "./assets/images/backward-step-solid.svg";
+import forward from "./assets/images/forward-step-solid.svg";
+import settingfoto from "./assets/images/gear-solid.svg";
 
 const videoUrl = "https://media.w3.org/2010/05/sintel/trailer_hd.mp4";
 function App() {
@@ -10,8 +13,8 @@ function App() {
   const [descendingTime, setDescendingTime] = useState<number>(0);
   const [incrementingTime, setIncrementingTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
-  const [skipSeconds, setSkipSeconds] = useState<number>(10);
-  const [jumpBackSeconds, setJumpBackSeconds] = useState<number>(10);
+  const [skipSeconds, setSkipSeconds] = useState<number>();
+  const [jumpBackSeconds, setJumpBackSeconds] = useState<number>();
   const [selectedQuality, setSelectedQuality] = useState("720p");
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
 
@@ -47,27 +50,14 @@ function App() {
       "0"
     )}`;
   };
-  const skipForward = () => {
-    if (videoRef.current) {
-      const newTime = videoRef.current.currentTime + skipSeconds;
-      if (newTime <= videoRef.current.duration) {
-        videoRef.current.currentTime = newTime;
-        setCurrentTime(newTime);
-      }
-    }
+  const forward5Sec = () => {
+    const video = videoRef.current!;
+    video.currentTime += 5;
   };
 
-  const jumpBack = () => {
-    if (videoRef.current) {
-      const newTime = videoRef.current.currentTime - jumpBackSeconds;
-      if (newTime >= 0) {
-        videoRef.current.currentTime = newTime;
-        setCurrentTime(newTime);
-      } else {
-        videoRef.current.currentTime = 0;
-        setCurrentTime(0);
-      }
-    }
+  const replay5Sec = () => {
+    const video = videoRef.current!;
+    video.currentTime -= 5;
   };
 
   const handleQualityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -115,52 +105,57 @@ function App() {
             />
             <Incrementing> {formatTime(incrementingTime)}</Incrementing>
           </Currentvideodiv>
-          <button onClick={jumpBack}>
-            Jump Back {jumpBackSeconds} seconds
-          </button>
-          <Play
-            onClick={() => {
-              if (videoRef.current?.paused) {
-                videoRef.current?.play();
-              } else {
-                videoRef.current?.pause();
-              }
-            }}
-          >
-            {videoRef.current?.paused ? (
-              <img src={playimage} alt="Play" />
-            ) : (
-              <img src={pauseimage} alt="Pause" />
-            )}
-          </Play>
-
-          <button onClick={skipForward}>
-            Skip Forward {skipSeconds} seconds
-          </button>
-
-          <div>
-            <label>
-              Quality:
-              <select value={selectedQuality} onChange={handleQualityChange}>
-                <option value="720p">720p</option>
-                <option value="1080p">1080p</option>
-              </select>
-            </label>
-
-            <label>
-              Speed:
-              <select
-                value={playbackSpeed}
-                onChange={handlePlaybackSpeedChange}
+          <Playquality>
+            <Playdiv>
+              <Button onClick={replay5Sec}>
+                <img src={back} />
+              </Button>
+              <Play
+                onClick={() => {
+                  if (videoRef.current?.paused) {
+                    videoRef.current?.play();
+                  } else {
+                    videoRef.current?.pause();
+                  }
+                }}
               >
-                {playbackSpeedOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
+                {videoRef.current?.paused ? (
+                  <img src={playimage} alt="Play" />
+                ) : (
+                  <img src={pauseimage} alt="Pause" />
+                )}
+              </Play>
+
+              <Button onClick={forward5Sec}>
+                <img src={forward} />
+              </Button>
+            </Playdiv>
+            <Settingfoto>
+              <img src={settingfoto} />
+            </Settingfoto>
+
+            <Quality>
+              <Label>
+                <Select value={selectedQuality} onChange={handleQualityChange}>
+                  <option value="720p">720p</option>
+                  <option value="1080p">1080p</option>
+                </Select>
+              </Label>
+
+              <Label>
+                <Select
+                  value={playbackSpeed}
+                  onChange={handlePlaybackSpeedChange}
+                >
+                  {playbackSpeedOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              </Label>
+            </Quality>
+          </Playquality>
         </Settingdiv>
         <Volume
           type="range"
@@ -184,31 +179,34 @@ function App() {
 export default App;
 
 const Video = styled.video`
-  width: 150vh;
+  width: 900px;
+  height: 500px;
 `;
 
 const Maindiv = styled.div`
   display: flex;
   justify-content: center;
   width: 150vh;
-
-  position: relative;
 `;
 
 const Play = styled.button`
-  width: 23px;
-  height: 23px;
+  width: 28px;
+  height: 28px;
   background-color: white;
   border-radius: 50%;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Settingdiv = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  top: 200px;
-  left: 500px;
+  top: 450px;
 `;
 
 const Volume = styled.input`
@@ -218,13 +216,13 @@ const Volume = styled.input`
 `;
 
 const Currentvideo = styled.input`
-  color: white;
+  width: 700px;
 `;
 const Descending = styled.div`
   color: white;
-  font-family: " Roboto";
+  font-family: "Roboto";
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 200;
   line-height: 28px;
   letter-spacing: 0em;
   text-align: left;
@@ -236,7 +234,7 @@ const Incrementing = styled.div`
   color: white;
   font-family: "Roboto";
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 200;
   line-height: 28px;
   letter-spacing: 0em;
   text-align: left;
@@ -244,5 +242,44 @@ const Incrementing = styled.div`
 
 const Currentvideodiv = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
+`;
+
+const Playdiv = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+const Button = styled.button`
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const Label = styled.label`
+  color: white;
+`;
+
+const Quality = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Playquality = styled.div`
+  display: flex;
+`;
+
+const Select = styled.select`
+  width: 55px;
+`;
+const Settingfoto = styled.div`
+  width: 23px;
+  height: 23px;
+  background-color: white;
+  border-radius: 50%;
 `;
