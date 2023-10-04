@@ -17,6 +17,7 @@ function App() {
   const [jumpBackSeconds, setJumpBackSeconds] = useState<number>();
   const [selectedQuality, setSelectedQuality] = useState("720p");
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
+  const [settingButton, setSettingButton] = useState<boolean>(false);
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
@@ -131,10 +132,19 @@ function App() {
               </Button>
             </Playdiv>
             <Settingfoto>
-              <img src={settingfoto} />
+              <Settingimage
+                onClick={() => {
+                  setSettingButton((prevIsOpen) => !prevIsOpen);
+                }}
+                src={settingfoto}
+              />
             </Settingfoto>
 
-            <Quality>
+            <Quality
+              style={
+                settingButton ? { display: "inline" } : { display: "none" }
+              }
+            >
               <Label>
                 <Select value={selectedQuality} onChange={handleQualityChange}>
                   <option value="720p">720p</option>
@@ -212,7 +222,31 @@ const Settingdiv = styled.div`
 const Volume = styled.input`
   position: absolute;
   top: 200px;
-  left: 200px;
+  right: 200px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: grey;
+  height: 5px;
+  border-radius: 5px;
+  outline: none;
+  margin: 10px 0;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  &:focus::-webkit-slider-thumb {
+    border-color: #fff;
+  }
 `;
 
 const Currentvideo = styled.input`
@@ -278,8 +312,16 @@ const Select = styled.select`
   width: 55px;
 `;
 const Settingfoto = styled.div`
-  width: 23px;
-  height: 23px;
+  width: 25px;
+  height: 25px;
   background-color: white;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Settingimage = styled.img`
+  width: 20px;
+  height: 20px;
 `;
