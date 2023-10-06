@@ -16,6 +16,7 @@ function App() {
   const [selectedQuality, setSelectedQuality] = useState("720p");
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [settingButton, setSettingButton] = useState<boolean>(false);
+  const [toglleButton, setTogleButton] = useState<boolean>(true);
 
   useEffect(() => {
     const handleTimeUpdate = (event: Event) => {
@@ -79,14 +80,23 @@ function App() {
     { value: 2.0, label: "2.0x" },
   ];
 
+  const toggleAndRevert = () => {
+    setTogleButton(true);
+
+    setTimeout(() => {
+      setTogleButton(false);
+    }, 5000); // 5000 milliseconds (5 seconds)
+  };
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <Maindiv>
+      <Maindiv onMouseEnter={toggleAndRevert} onMouseLeave={toggleAndRevert}>
         <Video ref={videoRef}>
           <source src={videoUrl} type="video/webm" />
         </Video>
 
-        <Settingdiv>
+        <Settingdiv
+          style={toglleButton ? { display: "flex" } : { display: "none" }}
+        >
           <Currentvideodiv>
             <Descending> {formatTime(descendingTime)}</Descending>
             <Currentvideo
@@ -119,9 +129,9 @@ function App() {
                 }}
               >
                 {videoRef.current?.paused ? (
-                  <img src={playimage} alt="Play" />
+                  <img src={pauseimage} alt="Play" />
                 ) : (
-                  <img src={pauseimage} alt="Pause" />
+                  <img src={playimage} alt="Pause" />
                 )}
               </Play>
 
@@ -197,6 +207,7 @@ const Maindiv = styled.div`
   display: flex;
   justify-content: center;
   width: 150vh;
+  cursor: pointer;
 `;
 
 const Play = styled.button`
