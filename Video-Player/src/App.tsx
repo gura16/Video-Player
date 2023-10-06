@@ -166,21 +166,22 @@ function App() {
               </Label>
             </Quality>
           </Playquality>
+
+          <Volume
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={volume}
+            onChange={(e) => {
+              const newVolume = parseFloat(e.target.value);
+              if (videoRef.current) {
+                videoRef.current.volume = newVolume;
+                setVolume(newVolume);
+              }
+            }}
+          />
         </Settingdiv>
-        <Volume
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={volume}
-          onChange={(e) => {
-            const newVolume = parseFloat(e.target.value);
-            if (videoRef.current) {
-              videoRef.current.volume = newVolume;
-              setVolume(newVolume);
-            }
-          }}
-        />
       </Maindiv>
     </div>
   );
@@ -191,6 +192,7 @@ export default App;
 const Video = styled.video`
   width: 900px;
   height: 500px;
+  position: relative;
 `;
 
 const Maindiv = styled.div`
@@ -221,31 +223,33 @@ const Settingdiv = styled.div`
 
 const Volume = styled.input`
   position: absolute;
-  top: 200px;
-  right: 200px;
+  top: -210px;
+  right: -40px;
   appearance: none;
   -webkit-appearance: none;
-  background: grey;
+
   height: 5px;
   border-radius: 5px;
   outline: none;
   margin: 10px 0;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
+  background: var(--thumb-background-color, #cf580d);
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #fff;
+    background: #4a09ed;
     border: 2px solid #fff;
     border-radius: 50%;
     cursor: pointer;
   }
 
   &:focus::-webkit-slider-thumb {
-    border-color: #fff;
+    background-color: blue;
+    border-color: blue;
   }
 `;
 
@@ -302,10 +306,14 @@ const Label = styled.label`
 const Quality = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 5px;
+  position: absolute;
+  right: 220px;
 `;
 
 const Playquality = styled.div`
   display: flex;
+  gap: 20px;
 `;
 
 const Select = styled.select`
