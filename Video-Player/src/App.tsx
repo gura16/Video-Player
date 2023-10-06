@@ -13,8 +13,6 @@ function App() {
   const [descendingTime, setDescendingTime] = useState<number>(0);
   const [incrementingTime, setIncrementingTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
-  const [skipSeconds, setSkipSeconds] = useState<number>();
-  const [jumpBackSeconds, setJumpBackSeconds] = useState<number>();
   const [selectedQuality, setSelectedQuality] = useState("720p");
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [settingButton, setSettingButton] = useState<boolean>(false);
