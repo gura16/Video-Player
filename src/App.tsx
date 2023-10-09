@@ -85,7 +85,7 @@ function App() {
 
     setTimeout(() => {
       setTogleButton(false);
-    }, 5000); // 5000 milliseconds (5 seconds)
+    }, 5000);
   };
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
